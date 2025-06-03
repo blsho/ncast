@@ -2,8 +2,7 @@ import feedparser
 import requests
 from jinja2 import Template
 
-template = """
-<?xml version="1.0" encoding="{{ encoding }}"?>
+template = """<?xml version="1.0" encoding="{{ encoding }}"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"
 	xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"
@@ -33,7 +32,7 @@ template = """
         {%- if entry.enclosure %}
         <item>
             <title>{{ entry.title | replace("\n", "") | replace("\t", "") }}</title>
-            <description><![CDATA[{{ entry.description }}]]</description>
+            <description><![CDATA[{{ entry.description }}]]></description>
             <guid isPermaLink="false">{{ entry.guid }}</guid>
             <dc:creator>{{ entry.author }}</dc:creator>
             <pubDate>{{ entry.published }}</pubDate>
@@ -42,8 +41,7 @@ template = """
         {%- endif %}
         {%- endfor %}
     </channel>
-</rss>
-    """
+</rss>"""
 
 d = feedparser.parse("https://dennikn.sk/feed")
 
