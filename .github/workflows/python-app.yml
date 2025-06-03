@@ -5,7 +5,7 @@ name: Generate ncast
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Hourly
+    - cron: '14 * * * *'  # Hourly
 
 permissions:
   contents: write
