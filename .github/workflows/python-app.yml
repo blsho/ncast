@@ -8,7 +8,7 @@ on:
     - cron: '0 * * * *'  # Hourly
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -17,6 +17,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
@@ -28,3 +30,4 @@ jobs:
     - name: Scan the cast
       run: |
         python scrape.py > output.xml
+    - uses: stefanzweifel/git-auto-commit-action@v5
