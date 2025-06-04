@@ -37,13 +37,14 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Scan the cast
         run: |
-          ./zdenko.py https://dennikn.sk/slovensko/feed/ https://blsho.github.io/ncast/zdoma.png > output/zdoma.rss
-          ./zdenko.py https://dennikn.sk/veda/feed https://blsho.github.io/ncast/zodbornik.png > output/zodbornik.rss
-          ./zdenko.py https://dennikn.sk/kultura/feed https://blsho.github.io/ncast/zpapajogurt.png > output/zpapajogurt.rss
-          ./zdenko.py https://dennikn.sk/sport/feed https://blsho.github.io/ncast/ztiper.png > output/ztiper.rss
-          ./zdenko.py https://dennikn.sk/komentare/feed https://blsho.github.io/ncast/zvkrcme.png > output/zvkrcme.rss
-          ./zdenko.py https://dennikn.sk/svet/feed https://blsho.github.io/ncast/zvonka.png > output/zvonka.rss
-          ./zdenko.py https://dennikn.sk/ekonomika/feed https://blsho.github.io/ncast/zvpraci.png > output/zvpraci.rss
+          ./zdenko.py https://dennikn.sk/slovensko/feed/ https://blsho.github.io/ncast/zdoma.png > output/zdoma.rss &
+          ./zdenko.py https://dennikn.sk/veda/feed https://blsho.github.io/ncast/zodbornik.png > output/zodbornik.rss &
+          ./zdenko.py https://dennikn.sk/kultura/feed https://blsho.github.io/ncast/zpapajogurt.png > output/zpapajogurt.rss &
+          ./zdenko.py https://dennikn.sk/sport/feed https://blsho.github.io/ncast/ztiper.png > output/ztiper.rss &
+          ./zdenko.py https://dennikn.sk/komentare/feed https://blsho.github.io/ncast/zvkrcme.png > output/zvkrcme.rss &
+          ./zdenko.py https://dennikn.sk/svet/feed https://blsho.github.io/ncast/zvonka.png > output/zvonka.rss &
+          ./zdenko.py https://dennikn.sk/ekonomika/feed https://blsho.github.io/ncast/zvpraci.png > output/zvpraci.rss &
+          wait
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
