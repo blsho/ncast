@@ -37,7 +37,6 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Scan the cast
         run: |
-          mkdir output
           ./zdenko.py https://dennikn.sk/slovensko/feed/ https://blsho.github.io/ncast/zdoma.png > output/zdoma.rss
           ./zdenko.py https://dennikn.sk/veda/feed https://blsho.github.io/ncast/zodbornik.png > output/zodbornik.rss
           ./zdenko.py https://dennikn.sk/kultura/feed https://blsho.github.io/ncast/zpapajogurt.png > output/zpapajogurt.rss
