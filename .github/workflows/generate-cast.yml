@@ -44,6 +44,13 @@ jobs:
           ./zdenko.py https://dennikn.sk/komentare/feed https://blsho.github.io/ncast/zvkrcme.png > output/zvkrcme.rss &
           ./zdenko.py https://dennikn.sk/svet/feed https://blsho.github.io/ncast/zvonka.png > output/zvonka.rss &
           ./zdenko.py https://dennikn.sk/ekonomika/feed https://blsho.github.io/ncast/zvpraci.png > output/zvpraci.rss &
+          ./zdenko.py https://denikn.cz/cesko/feed/ https://blsho.github.io/ncast/zcz.png > output/zczdoma.rss &
+          ./zdenko.py https://denikn.cz/svet/feed https://blsho.github.io/ncast/zcz.png > output/zczvonka.rss &
+          ./zdenko.py https://denikn.cz/ekonomika/feed https://blsho.github.io/ncast/zcz.png > output/zczvpraci.rss &
+          ./zdenko.py https://denikn.cz/nazory/feed https://blsho.github.io/ncast/zcz.png > output/zczvkrcme.rss &
+          ./zdenko.py https://denikn.cz/kultura/feed https://blsho.github.io/ncast/zcz.png > output/zczpapajogurt.rss &
+          ./zdenko.py https://denikn.cz/veda/feed https://blsho.github.io/ncast/zcz.png > output/zczodbornik.rss &
+          ./zdenko.py https://denikn.cz/sport/feed https://blsho.github.io/ncast/zcz.png > output/zcztiper.rss &
           wait
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

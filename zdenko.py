@@ -19,14 +19,14 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
         {%- endfor %}
         <image>
             <url>{{ pic }}</url>
-            <title>Dennik N</title>
-            <link>https://dennikn.sk/</link>
+            <title>{{ rss.feed.title | escape }}</title>
+            <link>{{ rss.feed.link }}</link>
         </image>
         <lastBuildDate>{{ rss.feed.updated }}</lastBuildDate>
         <language>{{ rss.feed.language }}</language>
-        <itunes:author>dennikn.sk</itunes:author>
+        <itunes:author>{{ rss.feed.link[8:] }}</itunes:author>
         <itunes:owner>
-            <itunes:name>dennikn.sk</itunes:name>
+            <itunes:name>{{ rss.feed.link[8:] }}</itunes:name>
         </itunes:owner>
         <itunes:explicit>No</itunes:explicit>
         <itunes:category text="News" />
@@ -47,9 +47,10 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
 </rss>"""
 
 d = feedparser.parse(sys.argv[1])
+url_fqdn = "a-static.projektn.sk" if d.feed.link[8:]=="dennikn.sk" else "static.novydenik.com"
 
 for item in d.entries:
-    url_prefix = f"https://a-static.projektn.sk/{item.published_parsed[0]}/{item.published_parsed[1]:02}/neural-audio-elevenlabs-{item.guid[22:]}-"
+    url_prefix = f"https://{url_fqdn}/{item.published_parsed[0]}/{item.published_parsed[1]:02}/neural-audio-elevenlabs-{item.guid.split('=')[-1]}-"
     url = ""
     for i in range(9, 0, -1):
         url_voice = f"{url_prefix}{i}.mp3"
