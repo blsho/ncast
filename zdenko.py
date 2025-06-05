@@ -51,7 +51,7 @@ d = feedparser.parse(sys.argv[1])
 for item in d.entries:
     url_prefix = f"https://a-static.projektn.sk/{item.published_parsed[0]}/{item.published_parsed[1]:02}/neural-audio-elevenlabs-{item.guid[22:]}-"
     url = ""
-    for i in range(9, 1, -1):
+    for i in range(9, 0, -1):
         url_voice = f"{url_prefix}{i}.mp3"
         response = requests.head(url_voice)
         if response.status_code == 200:
