@@ -4,7 +4,7 @@ on:
   push:
     branches: [$default-branch]
   schedule:
-    - cron: '26 * * * *'  # Hourly
+    - cron: '26 6-22 * * *'  # Hourly
   workflow_dispatch:
 
 permissions:

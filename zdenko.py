@@ -51,22 +51,17 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
 d = feedparser.parse(sys.argv[1])
 url_fqdn = "a-static.projektn.sk" if d.feed.link[8:]=="dennikn.sk" else "static.novydenik.com"
 
-for item in d.entries:
-    url_prefix = f"https://{url_fqdn}/{item.published_parsed[0]}/{item.published_parsed[1]:02}/neural-audio-elevenlabs-{item.guid.split('=')[-1]}-"
-    url = ""
-    for i in range(9, 0, -1):
-        url_voice = f"{url_prefix}{i}.mp3"
-        response = requests.head(url_voice)
-        if response.status_code == 200:
-            url = url_voice
-            length = response.headers['content-length']
-            break
-    if url:
-        item.enclosure =  url
-        item.length = length
-        response = requests.get(item.link)
-        content_parser = BeautifulSoup(response.content.decode(), 'html.parser')
+for item in d.entries[:10]:
+    article = requests.get(item.link)
+    content_parser = BeautifulSoup(article.content.decode(), 'html.parser')
+    try:
+        item.enclosure =  content_parser.audio.source.attrs['src']
         item.duration = content_parser.audio.attrs['data-duration']
+        voice = requests.head(item.enclosure)
+        if voice.status_code == 200:
+            item.length = voice.headers['content-length']
+    except AttributeError:
+        continue
 
 template_j2 = Template(template)
 podcast_xml = template_j2.render(rss=d, pic=sys.argv[2])
