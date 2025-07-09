@@ -4,6 +4,7 @@ import feedparser
 import requests
 from jinja2 import Template
 import sys
+from bs4 import BeautifulSoup
 
 template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -40,6 +41,7 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
             <dc:creator>{{ entry.author }}</dc:creator>
             <pubDate>{{ entry.published }}</pubDate>
             <enclosure url="{{ entry.enclosure }}" type="audio/mpeg" />
+            <itunes:duration>{{ entry.duration }}</itunes:duration>
         </item>
         {%- endif %}
         {%- endfor %}
@@ -60,6 +62,9 @@ for item in d.entries:
             break
     if url:
         item.enclosure =  url
+        response = requests.get(item.link)
+        content_parser = BeautifulSoup(response.content.decode(), 'html.parser')
+        item.duration = content_parser.audio.attrs['data-duration']
 
 template_j2 = Template(template)
 podcast_xml = template_j2.render(rss=d, pic=sys.argv[2])
