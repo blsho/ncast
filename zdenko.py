@@ -15,6 +15,8 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
     <channel>
         <title>{{ rss.feed.title | escape }}</title>
         <description>{{ rss.feed.description | escape}}</description>
+        <itunes:summary>{{ rss.feed.description | escape}}</itunes:summary>
+        <itunes:type>episodic</itunes:type>
         {%- for link in rss.feed.links %}
         <link>{{ link.href }}</link>
         {%- endfor %}
@@ -29,7 +31,7 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
         <itunes:owner>
             <itunes:name>{{ rss.feed.link[8:] }}</itunes:name>
         </itunes:owner>
-        <itunes:explicit>No</itunes:explicit>
+        <itunes:explicit>false</itunes:explicit>
         <itunes:category text="News" />
         <itunes:image href="{{ pic }}"/>
         {%- for entry in rss.entries %}
@@ -42,6 +44,7 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
             <pubDate>{{ entry.published }}</pubDate>
             <enclosure url="{{ entry.enclosure }}" length="{{ entry.length }}" type="audio/mpeg" />
             <itunes:duration>{{ entry.duration }}</itunes:duration>
+            <itunes:explicit>false</itunes:explicit>
         </item>
         {%- endif %}
         {%- endfor %}
