@@ -40,7 +40,7 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
             <guid isPermaLink="false">{{ entry.guid }}</guid>
             <dc:creator>{{ entry.author }}</dc:creator>
             <pubDate>{{ entry.published }}</pubDate>
-            <enclosure url="{{ entry.enclosure }}" type="audio/mpeg" />
+            <enclosure url="{{ entry.enclosure }}" length="{{ entry.length }}" type="audio/mpeg" />
             <itunes:duration>{{ entry.duration }}</itunes:duration>
         </item>
         {%- endif %}
@@ -59,9 +59,11 @@ for item in d.entries:
         response = requests.head(url_voice)
         if response.status_code == 200:
             url = url_voice
+            length = response.headers['content-length']
             break
     if url:
         item.enclosure =  url
+        item.length = length
         response = requests.get(item.link)
         content_parser = BeautifulSoup(response.content.decode(), 'html.parser')
         item.duration = content_parser.audio.attrs['data-duration']
