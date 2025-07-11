@@ -45,6 +45,9 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
             <enclosure url="{{ entry.enclosure }}" length="{{ entry.length }}" type="audio/mpeg" />
             <itunes:duration>{{ entry.duration }}</itunes:duration>
             <itunes:explicit>false</itunes:explicit>
+            {%- if entry.art %}
+            <itunes:image href="{{ entry.art }}"/>
+            {%- endif %}
         </item>
         {%- endif %}
         {%- endfor %}
@@ -63,6 +66,9 @@ for item in d.entries[:10]:
         voice = requests.head(item.enclosure)
         if voice.status_code == 200:
             item.length = voice.headers['content-length']
+        episode_art = content_parser.find('h1').img.attrs['src'].split('?')[0]
+        if episode_art.endswith(('.png', '.jpg')):
+            item.art = episode_art
     except AttributeError:
         continue
 
