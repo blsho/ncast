@@ -55,6 +55,7 @@ jobs:
           ./zdenko.py https://denikn.cz/kultura/feed https://blsho.github.io/ncast/zcz.png > output/zczpapajogurt.rss &
           ./zdenko.py https://denikn.cz/veda/feed https://blsho.github.io/ncast/zcz.png > output/zczodbornik.rss &
           ./zdenko.py https://denikn.cz/sport/feed https://blsho.github.io/ncast/zcz.png > output/zcztiper.rss &
+          ./zdenko.py https://denikn.cz/tag/romancovaspol/feed https://img.novydenik.com/wp-static/2023/11/romancov-a-spol-OBR.jpg > output/zczromanko.rss &
           wait
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
