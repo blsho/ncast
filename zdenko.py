@@ -5,12 +5,15 @@ import requests
 from jinja2 import Template
 import sys
 from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
 
 template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/"
+<rss version="2.0"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"
-	xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"
-	xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:anchor="https://anchor.fm/xmlns"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+    xmlns:anchor="https://anchor.fm/xmlns"
 	xmlns:podcast="https://podcastindex.org/namespace/1.0">
     <channel>
         <title>{{ rss.feed.title | escape }}</title>
@@ -54,20 +57,20 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
     </channel>
 </rss>"""
 
-d = feedparser.parse(sys.argv[1])
-url_fqdn = "a-static.projektn.sk" if d.feed.link[8:]=="dennikn.sk" else "static.novydenik.com"
+ua = UserAgent(os=["Windows", "Android", "iOS"], min_percentage=0.05)
+d = feedparser.parse(sys.argv[1], agent=ua.random)
 
 for item in d.entries[:10]:
-    article = requests.get(item.link)
-    content_parser = BeautifulSoup(article.content.decode(), 'html.parser')
+    article = requests.get(item.link, headers={"User-Agent": ua.random})
+    content_parser = BeautifulSoup(article.content.decode(), "html.parser")
     try:
-        item.enclosure =  content_parser.audio.source.attrs['src']
-        item.duration = content_parser.audio.attrs['data-duration']
-        voice = requests.head(item.enclosure)
+        item.enclosure = content_parser.audio.source.attrs["src"]
+        item.duration = content_parser.audio.attrs["data-duration"]
+        voice = requests.head(item.enclosure, headers={"User-Agent": ua.random})
         if voice.status_code == 200:
-            item.length = voice.headers['content-length']
-        episode_art = content_parser.find('h1').img.attrs['src'].split('?')[0]
-        if episode_art.endswith(('.png', '.jpg')):
+            item.length = voice.headers["content-length"]
+        episode_art = content_parser.find("h1").img.attrs["src"].split("?")[0]
+        if episode_art.endswith((".png", ".jpg", ".svg")):
             item.art = episode_art
     except AttributeError:
         continue
