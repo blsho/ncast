@@ -59,6 +59,9 @@ jobs:
           ./zdenko.py https://denikn.cz/sport/feed https://blsho.github.io/ncast/zcz.png > output/zcztiper.rss &
           ./zdenko.py https://denikn.cz/podcast-vrtetipsem/feed https://img.novydenik.com/wp-static/2025/05/Vrtetitipsem-logo-mini.png > output/zczhavo.rss &
           ./zdenko.py https://denikn.cz/podcast-romancovaspol/feed https://img.novydenik.com/wp-static/2023/11/romancov-a-spol-OBR.jpg > output/zczromancov.rss &
+          ./zdenko.py https://denikn.cz/podcast-studio-n/feed https://img.novydenik.com/wp-static/2024/08/StudioN-logo.png > output/zczstudio.rss &
+          ./zdenko.py https://dennikn.sk/autor/petra-prochazkova/feed/ https://img.projektn.sk/wp-static/2024/08/prochazkova-petra.jpg > output/zpetka.rss &
+          ./zdenko.py https://dennikn.sk/autor/timothy-snyder/feed/ https://img.projektn.sk/wp-static/2015/06/I56A8343.jpg > output/ztimko.rss &
           wait
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
