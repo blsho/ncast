@@ -37,11 +37,14 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
         <itunes:explicit>false</itunes:explicit>
         <itunes:category text="News" />
         <itunes:image href="{{ pic }}"/>
+        <podcast:funding url="https://predplatne.dennikn.sk/">Ak chces ZdeNka, tak nebuť k*k*t a kúp si Nko.</podcast:funding>
         {%- for entry in rss.entries %}
         {%- if entry.enclosure %}
         <item>
             <title>{{ entry.title | replace("\n", "") | replace("\t", "") }}</title>
             <description><![CDATA[{{ entry.description }}]]></description>
+            <link>{{ entry.link }}</link>
+            <podcast:transcript url="{{ entry.link }}" type="text/html" />
             <guid isPermaLink="false">{{ entry.guid }}</guid>
             <dc:creator>{{ entry.author }}</dc:creator>
             <pubDate>{{ entry.published }}</pubDate>
