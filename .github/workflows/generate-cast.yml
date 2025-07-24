@@ -64,6 +64,7 @@ jobs:
           ./zdenko.py https://dennikn.sk/autor/timothy-snyder/feed/ https://img.projektn.sk/wp-static/2015/06/I56A8343.jpg > output/ztimko.rss &
           ./zdenko.py https://dennikn.sk/tema/trumpov-svet/feed/ https://img.projektn.sk/wp-static/2025/03/trumpov-svet.png > output/ztrump.rss &
           ./zdenko.py https://dennikn.sk/autor/jana-ciglerova/feed/ https://img.projektn.sk/wp-static/2024/08/jana-foto.jpg > output/zjanka.rss &
+          ./zdenko.py https://dennikn.sk/tema/dusevne-zdravie/feed https://img.projektn.sk/wp-static/2024/07/psychologicka-poradna.png > output/zkebuli.rss &
           wait
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
