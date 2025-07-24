@@ -37,6 +37,7 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
         <itunes:explicit>false</itunes:explicit>
         <itunes:category text="News" />
         <itunes:image href="{{ pic }}"/>
+        <podcast:funding url="https://predplatne.dennikn.sk/">Ak chces ZdeNka, tak nebuť k*k*t a kúp si Nko.</podcast:funding>
         {%- for entry in rss.entries %}
         {%- if entry.enclosure %}
         <item>
