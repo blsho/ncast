@@ -62,6 +62,8 @@ jobs:
           ./zdenko.py https://denikn.cz/podcast-studio-n/feed https://img.novydenik.com/wp-static/2024/08/StudioN-logo.png > output/zczstudio.rss &
           ./zdenko.py https://dennikn.sk/autor/petra-prochazkova/feed/ https://img.projektn.sk/wp-static/2024/08/prochazkova-petra.jpg > output/zpetka.rss &
           ./zdenko.py https://dennikn.sk/autor/timothy-snyder/feed/ https://img.projektn.sk/wp-static/2015/06/I56A8343.jpg > output/ztimko.rss &
+          ./zdenko.py https://dennikn.sk/tema/trumpov-svet/feed/ https://img.projektn.sk/wp-static/2025/03/trumpov-svet.png > output/ztrump.rss &
+          ./zdenko.py https://dennikn.sk/autor/jana-ciglerova/feed/ https://img.projektn.sk/wp-static/2024/08/jana-foto.jpg > output/zjanka.rss &
           wait
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
