@@ -41,7 +41,7 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
         {%- if entry.enclosure %}
         <item>
             <title>{{ entry.title | replace("\n", "") | replace("\t", "") }}</title>
-            <description><![CDATA[{{ entry.content }} <br><p>Viac na <a href="{{ entry.guid }}">{{ entry.guid }}</a></p>]]></description>
+            <description><![CDATA[{{ entry.content }} <br><p>Viac na <a href="{{ entry.link }}">{{ entry.link }}</a></p>]]></description>
             <guid isPermaLink="false">{{ entry.guid }}</guid>
             <dc:creator>{{ entry.author }}</dc:creator>
             <pubDate>{{ entry.published }}</pubDate>
