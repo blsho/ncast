@@ -66,6 +66,7 @@ for item in d.entries[:10]:
     try:
         item.enclosure = content_parser.audio.source.attrs["src"]
         item.duration = content_parser.audio.attrs["data-duration"]
+        item.content = item.description
         voice = requests.head(item.enclosure, headers={"User-Agent": ua.random})
         if voice.status_code == 200:
             item.length = voice.headers["content-length"]
