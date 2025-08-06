@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import feedparser
 import requests
@@ -41,7 +41,7 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
         {%- if entry.enclosure %}
         <item>
             <title>{{ entry.title | replace("\n", "") | replace("\t", "") }}</title>
-            <description><![CDATA[{{ entry.description }}]]></description>
+            <description><![CDATA[{{ entry.content }} <br><p>Viac na <a href="{{ entry.guid }}">{{ entry.guid }}</a></p>]]></description>
             <guid isPermaLink="false">{{ entry.guid }}</guid>
             <dc:creator>{{ entry.author }}</dc:creator>
             <pubDate>{{ entry.published }}</pubDate>
@@ -70,9 +70,12 @@ for item in d.entries[:10]:
         if voice.status_code == 200:
             item.length = voice.headers["content-length"]
         episode_art = content_parser.find("h1").img.attrs["src"].split("?")[0]
-        if episode_art.endswith((".png", ".jpg", ".svg")):
+        if episode_art.endswith((".png", ".jpg")):
             item.art = episode_art
-    except AttributeError:
+        content_parser.find(class_="entry-content").find("div").decompose()
+        content_parser.find(class_="entry-content").find("span").decompose()
+        item.content = content_parser.find(class_="entry-content")
+    except Exception:
         continue
 
 template_j2 = Template(template)
