@@ -6,6 +6,9 @@ from jinja2 import Template
 import sys
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
+import yaml
+import concurrent.futures
+import argparse
 
 template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
 <rss version="2.0"
@@ -59,27 +62,73 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
 </rss>"""
 
 ua = UserAgent(os=["Windows", "Android", "iOS"], min_percentage=0.05)
-d = feedparser.parse(sys.argv[1], agent=ua.random)
 
-for item in d.entries[:10]:
-    article = requests.get(item.link, headers={"User-Agent": ua.random})
-    content_parser = BeautifulSoup(article.content.decode(), "html.parser")
+
+# Function to process each task
+def process_task(task_config):
+    feed = task_config.get("feed")
+    image = task_config.get("image")
+    output = task_config.get("output")
+    d = feedparser.parse(feed, agent=ua.random)
+    for item in d.entries[:10]:
+        article = requests.get(item.link, headers={"User-Agent": ua.random})
+        content_parser = BeautifulSoup(article.content.decode(), "html.parser")
+        try:
+            item.enclosure = content_parser.audio.source.attrs["src"]
+            item.duration = content_parser.audio.attrs["data-duration"]
+            item.content = item.description
+            voice = requests.head(item.enclosure, headers={"User-Agent": ua.random})
+            if voice.status_code == 200:
+                item.length = voice.headers["content-length"]
+            episode_art = content_parser.find("h1").img.attrs["src"].split("?")[0]
+            if episode_art.endswith((".png", ".jpg")):
+                item.art = episode_art
+            content_parser.find(class_="entry-content").find("div").decompose()
+            content_parser.find(class_="entry-content").find("span").decompose()
+            item.content = content_parser.find(class_="entry-content")
+        except Exception:
+            continue
+
+    template_j2 = Template(template)
+    podcast_xml = template_j2.render(rss=d, pic=image)
     try:
-        item.enclosure = content_parser.audio.source.attrs["src"]
-        item.duration = content_parser.audio.attrs["data-duration"]
-        item.content = item.description
-        voice = requests.head(item.enclosure, headers={"User-Agent": ua.random})
-        if voice.status_code == 200:
-            item.length = voice.headers["content-length"]
-        episode_art = content_parser.find("h1").img.attrs["src"].split("?")[0]
-        if episode_art.endswith((".png", ".jpg")):
-            item.art = episode_art
-        content_parser.find(class_="entry-content").find("div").decompose()
-        content_parser.find(class_="entry-content").find("span").decompose()
-        item.content = content_parser.find(class_="entry-content")
-    except Exception:
-        continue
+        with open(output, "w") as f:
+            f.write(podcast_xml)
+    except Exception as e:
+        print(f"Error writing to file for {feed}: {e}")
 
-template_j2 = Template(template)
-podcast_xml = template_j2.render(rss=d, pic=sys.argv[2])
-print(f"{podcast_xml}")
+
+# Load configuration from YAML file
+def load_config(yaml_path):
+    try:
+        with open(yaml_path, "r") as file:
+            return yaml.safe_load(file)
+    except Exception as e:
+        print(f"Error loading config file: {e}")
+        sys.exit(1)
+
+
+# Parse command-line arguments
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Process YAML configuration in parallel."
+    )
+    parser.add_argument("config", type=str, help="Path to the YAML configuration file")
+    return parser.parse_args()
+
+
+# Main function
+def main():
+    args = parse_args()
+    config = load_config(args.config)
+
+    if not isinstance(config, list):
+        print("Configuration must be a list of dictionaries.")
+        sys.exit(1)
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        [executor.submit(process_task, cfg) for cfg in config]
+
+
+if __name__ == "__main__":
+    main()

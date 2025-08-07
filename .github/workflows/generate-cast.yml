@@ -39,32 +39,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Scan the cast
         run: |
-          ./zdenko.py https://dennikn.sk/feed https://blsho.github.io/ncast/zdenko.png > output/z.rss &
-          ./zdenko.py https://dennikn.sk/slovensko/feed/ https://blsho.github.io/ncast/zdoma.png > output/zdoma.rss &
-          ./zdenko.py https://dennikn.sk/veda/feed https://img.projektn.sk/wp-static/2024/07/pat-knih.png > output/zodbornik.rss &
-          ./zdenko.py https://dennikn.sk/kultura/feed https://img.projektn.sk/wp-static/2024/07/highfive.png > output/zpapajogurt.rss &
-          ./zdenko.py https://dennikn.sk/sport/feed https://img.projektn.sk/wp-static/2025/04/Poradna-o-tele-2-1.png > output/ztiper.rss &
-          ./zdenko.py https://dennikn.sk/komentare/feed https://blsho.github.io/ncast/zvkrcme.png > output/zvkrcme.rss &
-          ./zdenko.py https://dennikn.sk/svet/feed https://img.projektn.sk/wp-static/2025/03/trumpov-svet.png > output/zvonka.rss &
-          ./zdenko.py https://dennikn.sk/ekonomika/feed https://e.dennikn.sk/wp-content/themes/dn-3-sk/build/assets/e.svg > output/zvpraci.rss &
-          ./zdenko.py https://dennikn.sk/rodina-a-vztahy/feed https://img.projektn.sk/wp-static/2024/07/psychologicka-poradna.png > output/zzdenka.rss &
-          ./zdenko.py https://dennikn.sk/zdravie/feed https://blsho.github.io/ncast/zdenko.png > output/znacige.rss &
-          ./zdenko.py https://denikn.cz/feed https://blsho.github.io/ncast/zcz.png > output/zcz.rss &
-          ./zdenko.py https://denikn.cz/cesko/feed/ https://blsho.github.io/ncast/zcz.png > output/zczdoma.rss &
-          ./zdenko.py https://denikn.cz/svet/feed https://blsho.github.io/ncast/zcz.png > output/zczvonka.rss &
-          ./zdenko.py https://denikn.cz/ekonomika/feed https://blsho.github.io/ncast/zcz.png > output/zczvpraci.rss &
-          ./zdenko.py https://denikn.cz/nazory/feed https://blsho.github.io/ncast/zcz.png > output/zczvkrcme.rss &
-          ./zdenko.py https://denikn.cz/kultura/feed https://blsho.github.io/ncast/zcz.png > output/zczpapajogurt.rss &
-          ./zdenko.py https://denikn.cz/veda/feed https://blsho.github.io/ncast/zcz.png > output/zczodbornik.rss &
-          ./zdenko.py https://denikn.cz/sport/feed https://blsho.github.io/ncast/zcz.png > output/zcztiper.rss &
-          ./zdenko.py https://denikn.cz/podcast-vrtetipsem/feed https://img.novydenik.com/wp-static/2025/05/Vrtetitipsem-logo-mini.png > output/zczhavo.rss &
-          ./zdenko.py https://denikn.cz/podcast-romancovaspol/feed https://img.novydenik.com/wp-static/2023/11/romancov-a-spol-OBR.jpg > output/zczromancov.rss &
-          ./zdenko.py https://denikn.cz/podcast-studio-n/feed https://img.novydenik.com/wp-static/2024/08/StudioN-logo.png > output/zczstudio.rss &
-          ./zdenko.py https://dennikn.sk/autor/petra-prochazkova/feed/ https://img.projektn.sk/wp-static/2024/08/prochazkova-petra.jpg > output/zpetka.rss &
-          ./zdenko.py https://dennikn.sk/autor/timothy-snyder/feed/ https://img.projektn.sk/wp-static/2015/06/I56A8343.jpg > output/ztimko.rss &
-          ./zdenko.py https://dennikn.sk/tema/trumpov-svet/feed/ https://img.projektn.sk/wp-static/2025/03/trumpov-svet.png > output/ztrump.rss &
-          ./zdenko.py https://dennikn.sk/autor/jana-ciglerova/feed/ https://img.projektn.sk/wp-static/2024/08/jana-foto.jpg > output/zjanka.rss &
-          ./zdenko.py https://dennikn.sk/tema/dusevne-zdravie/feed https://img.projektn.sk/wp-static/2024/07/psychologicka-poradna.png > output/zkebuli.rss &
+          ./zdenko.py config.yaml
           wait
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
