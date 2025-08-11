@@ -71,15 +71,16 @@ async def process_episode(episode, session):
             episode.enclosure = content_parser.audio.source.attrs["src"]
             episode.duration = content_parser.audio.attrs["data-duration"]
             episode.content = episode.description
-            async with session.get(episode.enclosure, headers={"User-Agent": ua.random}) as voice:
-                if await voice.status_code == 200:
+            print(f"enclosure: {episode.enclosure}")
+            async with session.head(episode.enclosure, headers={"User-Agent": ua.random}) as voice:
+                if voice.status == 200:
                     episode.length = voice.headers["content-length"]
-                episode_art = content_parser.find("h1").img.attrs["src"].split("?")[0]
-                if episode_art.endswith((".png", ".jpg")):
-                    episode.art = episode_art
-                content_parser.find(class_="entry-content").find("div").decompose()
-                content_parser.find(class_="entry-content").find("span").decompose()
-                episode.content = content_parser.find(class_="entry-content")
+            episode_art = content_parser.find("h1").img.attrs["src"].split("?")[0]
+            if episode_art.endswith((".png", ".jpg")):
+                episode.art = episode_art
+            content_parser.find(class_="entry-content").find("div").decompose()
+            content_parser.find(class_="entry-content").find("span").decompose()
+            episode.content = content_parser.find(class_="entry-content")
     except Exception:
         pass
 
@@ -91,7 +92,7 @@ async def process_feed(task_config):
     d = feedparser.parse(feed, agent=ua.random)
 
     async with aiohttp.ClientSession() as session:
-        tasks = [process_episode(episode, session)for episode in d.entries[:10]]
+        tasks = [process_episode(episode, session)for episode in d.entries]
         await asyncio.gather(*tasks)
         template_j2 = Template(template)
         podcast_xml = template_j2.render(rss=d, pic=image)
