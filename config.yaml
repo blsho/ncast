@@ -44,6 +44,11 @@
 - feed: https://dennikn.sk/tema/dusevne-zdravie/feed
   image: https://img.projektn.sk/wp-static/2024/07/psychologicka-poradna.png
   output: output/zkebuli.rss
+- feed: https://dennikn.sk/feed
+  image: https://blsho.github.io/ncast/zdenko.png
+  output: output/znoaudio.rss
+  exclude:
+    - Audio N
 # denikn.cz
 - feed: https://denikn.cz/feed
   image: https://blsho.github.io/ncast/zcz.png
