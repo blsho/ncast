@@ -64,6 +64,13 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
 
 ua = UserAgent(os=["Windows", "Android", "iOS"], min_percentage=0.05)
 
+def needed_episode(episode, exclude):
+    if exclude:
+        categories = set(map(lambda tag: tag['term'], episode.tags))
+        if set(exclude).intersection(categories):
+            return False
+    return True
+
 async def process_episode(episode, session):
     try:
         async with session.get(episode.link, headers={"User-Agent": ua.random}) as article:
@@ -71,7 +78,6 @@ async def process_episode(episode, session):
             episode.enclosure = content_parser.audio.source.attrs["src"]
             episode.duration = content_parser.audio.attrs["data-duration"]
             episode.content = episode.description
-            print(f"enclosure: {episode.enclosure}")
             async with session.head(episode.enclosure, headers={"User-Agent": ua.random}) as voice:
                 if voice.status == 200:
                     episode.length = voice.headers["content-length"]
@@ -89,10 +95,11 @@ async def process_feed(task_config):
     feed = task_config.get("feed")
     image = task_config.get("image")
     output = task_config.get("output")
+    exclude = task_config.get("exclude")
     d = feedparser.parse(feed, agent=ua.random)
 
     async with aiohttp.ClientSession() as session:
-        tasks = [process_episode(episode, session)for episode in d.entries]
+        tasks = [process_episode(episode, session)for episode in d.entries if needed_episode(episode, exclude)]
         await asyncio.gather(*tasks)
         template_j2 = Template(template)
         podcast_xml = template_j2.render(rss=d, pic=image)
