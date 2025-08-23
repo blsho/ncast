@@ -10,6 +10,7 @@ import concurrent.futures
 import argparse
 import aiohttp
 import asyncio
+import copy
 
 template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
 <rss version="2.0"
@@ -42,19 +43,19 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
         <itunes:category text="News" />
         <itunes:image href="{{ pic }}"/>
         <podcast:funding url="https://predplatne.dennikn.sk/">Ak chces ZdeNka, tak nebuť k*k*t a kúp si Nko.</podcast:funding>
-        {%- for entry in rss.entries %}
-        {%- if entry.enclosure %}
+        {%- for entry in rss.entries[:500] %}
+        {%- if entry.enclosures[0] %}
         <item>
             <title>{{ entry.title | replace("\n", "") | replace("\t", "") }}</title>
-            <description><![CDATA[{{ entry.content }} <br><p>Viac na <a href="{{ entry.link }}">{{ entry.link }}</a></p>]]></description>
+            <description><![CDATA[{{ entry.description }}]]></description>
             <guid isPermaLink="false">{{ entry.guid }}</guid>
             <dc:creator>{{ entry.author }}</dc:creator>
             <pubDate>{{ entry.published }}</pubDate>
-            <enclosure url="{{ entry.enclosure }}" length="{{ entry.length }}" type="audio/mpeg" />
-            <itunes:duration>{{ entry.duration }}</itunes:duration>
+            <enclosure url="{{ entry.enclosures[0].href }}" length="{{ entry.enclosures[0].length }}" type="audio/mpeg" />
+            <itunes:duration>{{ entry.itunes_duration }}</itunes:duration>
             <itunes:explicit>false</itunes:explicit>
-            {%- if entry.art %}
-            <itunes:image href="{{ entry.art }}"/>
+            {%- if entry.image %}
+            <itunes:image href="{{ entry.image.href }}"/>
             {%- endif %}
         </item>
         {%- endif %}
@@ -71,24 +72,34 @@ def needed_episode(episode, exclude):
             return False
     return True
 
-async def process_episode(episode, session):
+async def process_episode(episode, session, rss_podcast):
+    episode_podcast={}
     try:
         async with session.get(episode.link, headers={"User-Agent": ua.random}) as article:
             content_parser = BeautifulSoup(await article.text(), "html.parser")
-            episode.enclosure = content_parser.audio.source.attrs["src"]
-            episode.duration = content_parser.audio.attrs["data-duration"]
-            episode.content = episode.description
-            async with session.head(episode.enclosure, headers={"User-Agent": ua.random}) as voice:
+            episode_podcast["title"] = episode.title
+            episode_podcast["author"] = episode.author
+            episode_podcast["published"] = episode.published
+            episode_podcast["guid"] = episode.guid
+            episode_podcast["link"] = episode.link
+            episode_podcast["enclosures"]= [{}]
+            episode_podcast["enclosures"][0]["href"]= content_parser.audio.source.attrs["src"]
+            episode_podcast["enclosures"][0]["length"] = content_parser.audio.attrs["data-duration"]
+
+            description_sufix = f'<br><p>Viac na <a href="{ episode.link }">{ episode.link }</a></p>'
+            episode_podcast["description"] = f"{episode.description}{description_sufix}"
+            async with session.head(episode_podcast["enclosures"][0]["href"], headers={"User-Agent": ua.random}) as voice:
                 if voice.status == 200:
-                    episode.length = voice.headers["content-length"]
+                    episode_podcast["itunes_duration"] = voice.headers["content-length"]
             episode_art = content_parser.find("h1").img.attrs["src"].split("?")[0]
             if episode_art.endswith((".png", ".jpg")):
-                episode.art = episode_art
+                episode_podcast["image"]["href"]= episode_art
             content_parser.find(class_="entry-content").find("div").decompose()
             content_parser.find(class_="entry-content").find("span").decompose()
-            episode.content = content_parser.find(class_="entry-content")
+            episode_podcast["description"] = f"{content_parser.find(class_="entry-content")}{description_sufix}"
     except Exception:
         pass
+    rss_podcast.entries.insert(0, episode_podcast)
 
 # Function to process each task
 async def process_feed(task_config):
@@ -96,13 +107,21 @@ async def process_feed(task_config):
     image = task_config.get("image")
     output = task_config.get("output")
     exclude = task_config.get("exclude")
-    d = feedparser.parse(feed, agent=ua.random)
+    pub_url = task_config.get("pub_url")
+    rss_articles = feedparser.parse(feed, agent=ua.random)
+    rss_podcast = feedparser.parse(pub_url)
+    parsed_guids = [entry['guid'] for entry in rss_podcast['entries']]
+    if len(parsed_guids) == 0:
+        rss_podcast = copy.deepcopy(rss_articles)
 
     async with aiohttp.ClientSession() as session:
-        tasks = [process_episode(episode, session)for episode in d.entries if needed_episode(episode, exclude)]
+        tasks = [process_episode(episode, session, rss_podcast) for episode in rss_articles.entries if needed_episode(episode, exclude) and episode["guid"] not in parsed_guids]
         await asyncio.gather(*tasks)
         template_j2 = Template(template)
-        podcast_xml = template_j2.render(rss=d, pic=image)
+        try:
+            podcast_xml = template_j2.render(rss=rss_podcast, pic=image)
+        except Exception as e:
+            print(f"Error while templating: {e}")
         try:
             with open(output, "w") as f:
                 f.write(podcast_xml)
@@ -135,12 +154,8 @@ def main():
     args = parse_args()
     config = load_config(args.config)
 
-    if not isinstance(config, list):
-        print("Configuration must be a list of dictionaries.")
-        sys.exit(1)
-
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        [executor.submit(thread, cfg) for cfg in config]
+        [executor.submit(thread, feed) for group in config['groups'] for feed in group['feeds']]
 
 
 if __name__ == "__main__":
