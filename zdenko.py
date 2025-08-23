@@ -84,13 +84,13 @@ async def process_episode(episode, session, rss_podcast):
             episode_podcast["link"] = episode.link
             episode_podcast["enclosures"]= [{}]
             episode_podcast["enclosures"][0]["href"]= content_parser.audio.source.attrs["src"]
-            episode_podcast["enclosures"][0]["length"] = content_parser.audio.attrs["data-duration"]
+            episode_podcast["itunes_duration"] = content_parser.audio.attrs["data-duration"]
 
             description_sufix = f'<br><p>Viac na <a href="{ episode.link }">{ episode.link }</a></p>'
             episode_podcast["description"] = f"{episode.description}{description_sufix}"
             async with session.head(episode_podcast["enclosures"][0]["href"], headers={"User-Agent": ua.random}) as voice:
                 if voice.status == 200:
-                    episode_podcast["itunes_duration"] = voice.headers["content-length"]
+                    episode_podcast["enclosures"][0]["length"] = voice.headers["content-length"]
             episode_art = content_parser.find("h1").img.attrs["src"].split("?")[0]
             if episode_art.endswith((".png", ".jpg")):
                 episode_podcast["image"]["href"]= episode_art
