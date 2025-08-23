@@ -1,85 +1,115 @@
-# dennikn.sk
-- feed: https://dennikn.sk/feed
-  image: https://blsho.github.io/ncast/zdenko.png
-  output: output/z.rss
-- feed: https://dennikn.sk/slovensko/feed/
-  image: https://blsho.github.io/ncast/zdoma.png
-  output: output/zdoma.rss
-- feed: https://dennikn.sk/veda/feed
-  image: https://img.projektn.sk/wp-static/2024/07/pat-knih.png
-  output: output/zodbornik.rss
-- feed: https://dennikn.sk/kultura/feed 
-  image: https://img.projektn.sk/wp-static/2024/07/highfive.png
-  output: output/zpapajogurt.rss
-- feed: https://dennikn.sk/sport/feed
-  image: https://img.projektn.sk/wp-static/2025/04/Poradna-o-tele-2-1.png
-  output: output/ztiper.rss
-- feed: https://dennikn.sk/komentare/feed
-  image: https://blsho.github.io/ncast/zvkrcme.png
-  output: output/zvkrcme.rss
-- feed: https://dennikn.sk/svet/feed
-  image: https://img.projektn.sk/wp-static/2025/03/trumpov-svet.png
-  output: output/zvonka.rss
-- feed: https://dennikn.sk/ekonomika/feed
-  image: https://e.dennikn.sk/wp-content/themes/dn-3-sk/build/assets/e.svg
-  output: output/zvpraci.rss
-- feed: https://dennikn.sk/rodina-a-vztahy/feed
-  image: https://img.projektn.sk/wp-static/2024/07/psychologicka-poradna.png
-  output: output/zzdenka.rss
-- feed: https://dennikn.sk/zdravie/feed
-  image: https://blsho.github.io/ncast/zdenko.png
-  output: output/znacige.rss
-- feed: https://dennikn.sk/autor/petra-prochazkova/feed/
-  image: https://img.projektn.sk/wp-static/2024/08/prochazkova-petra.jpg
-  output: output/zpetka.rss
-- feed: https://dennikn.sk/autor/timothy-snyder/feed/
-  image: https://img.projektn.sk/wp-static/2015/06/I56A8343.jpg
-  output: output/ztimko.rss
-- feed: https://dennikn.sk/tema/trumpov-svet/feed/
-  image: https://img.projektn.sk/wp-static/2025/03/trumpov-svet.png
-  output: output/ztrump.rss
-- feed: https://dennikn.sk/autor/jana-ciglerova/feed/
-  image: https://img.projektn.sk/wp-static/2024/08/jana-foto.jpg
-  output: output/zjanka.rss
-- feed: https://dennikn.sk/tema/dusevne-zdravie/feed
-  image: https://img.projektn.sk/wp-static/2024/07/psychologicka-poradna.png
-  output: output/zkebuli.rss
-- feed: https://dennikn.sk/feed
-  image: https://blsho.github.io/ncast/zdenko.png
-  output: output/znoaudio.rss
-  exclude:
-    - Audio N
-# denikn.cz
-- feed: https://denikn.cz/feed
-  image: https://blsho.github.io/ncast/zcz.png
-  output: output/zcz.rss
-- feed: https://denikn.cz/cesko/feed/
-  image: https://blsho.github.io/ncast/zcz.png
-  output: output/zczdoma.rss
-- feed: https://denikn.cz/svet/feed
-  image: https://blsho.github.io/ncast/zcz.png
-  output: output/zczvonka.rss
-- feed: https://denikn.cz/ekonomika/feed
-  image: https://blsho.github.io/ncast/zcz.png
-  output: output/zczvpraci.rss
-- feed: https://denikn.cz/nazory/feed
-  image: https://blsho.github.io/ncast/zcz.png
-  output: output/zczvkrcme.rss
-- feed: https://denikn.cz/kultura/feed
-  image: https://blsho.github.io/ncast/zcz.png
-  output: output/zczpapajogurt.rss
-- feed: https://denikn.cz/veda/feed
-  image: https://blsho.github.io/ncast/zcz.png
-  output: output/zczodbornik.rss
-- feed: https://denikn.cz/sport/feed
-  image: https://blsho.github.io/ncast/zcz.png
-  output: output/zcztiper.rss
-- feed: https://denikn.cz/podcast-vrtetipsem/feed
-  image: https://img.novydenik.com/wp-static/2025/05/Vrtetitipsem-logo-mini.png
-  output: output/zczhavo.rss
-- feed: https://denikn.cz/podcast-romancovaspol/feed
-  image:  https://img.novydenik.com/wp-static/2023/11/romancov-a-spol-OBR.jpg
-  output: output/zczromancov.rss
-- feed: https://denikn.cz/podcast-studio-n/feed
-  image: https://img.novydenik.com/wp-static/2024/08/StudioN-logo.png
-  output: output/zczstudio.rss
+groups:
+  - name: Dennik N
+    feeds:
+      - feed: https://dennikn.sk/feed
+        image: https://blsho.github.io/ncast/zdenko.png
+        output: output/z.rss
+        pub_url: https://blsho.github.io/ncast/z.rss
+      - feed: https://dennikn.sk/slovensko/feed/
+        image: https://blsho.github.io/ncast/zdoma.png
+        output: output/zdoma.rss
+        pub_url: https://blsho.github.io/ncast/zdoma.rss
+      - feed: https://dennikn.sk/veda/feed
+        image: https://img.projektn.sk/wp-static/2024/07/pat-knih.png
+        output: output/zodbornik.rss
+        pub_url: https://blsho.github.io/ncast/zodbornik.rss
+      - feed: https://dennikn.sk/kultura/feed
+        image: https://img.projektn.sk/wp-static/2024/07/highfive.png
+        output: output/zpapajogurt.rss
+        pub_url: https://blsho.github.io/ncast/zpapajogurt.rss
+      - feed: https://dennikn.sk/sport/feed
+        image: https://img.projektn.sk/wp-static/2025/04/Poradna-o-tele-2-1.png
+        output: output/ztiper.rss
+        pub_url: https://blsho.github.io/ncast/ztiper.rss
+      - feed: https://dennikn.sk/komentare/feed
+        image: https://blsho.github.io/ncast/zvkrcme.png
+        output: output/zvkrcme.rss
+        pub_url: https://blsho.github.io/ncast/zvkrcme.rss
+      - feed: https://dennikn.sk/svet/feed
+        image: https://img.projektn.sk/wp-static/2025/03/trumpov-svet.png
+        output: output/zvonka.rss
+        pub_url: https://blsho.github.io/ncast/zvonka.rss
+      - feed: https://dennikn.sk/ekonomika/feed
+        image: https://e.dennikn.sk/wp-content/themes/dn-3-sk/build/assets/e.svg
+        output: output/zvpraci.rss
+        pub_url: https://blsho.github.io/ncast/zvpraci.rss
+      - feed: https://dennikn.sk/rodina-a-vztahy/feed
+        image: https://img.projektn.sk/wp-static/2024/07/psychologicka-poradna.png
+        output: output/zzdenka.rss
+        pub_url: https://blsho.github.io/ncast/zzdenka.rss
+      - feed: https://dennikn.sk/zdravie/feed
+        image: https://blsho.github.io/ncast/zdenko.png
+        output: output/znacige.rss
+        pub_url: https://blsho.github.io/ncast/znacige.rss
+      - feed: https://dennikn.sk/autor/petra-prochazkova/feed/
+        image: https://img.projektn.sk/wp-static/2024/08/prochazkova-petra.jpg
+        output: output/zpetka.rss
+        pub_url: https://blsho.github.io/ncast/zpetka.rss
+      - feed: https://dennikn.sk/autor/timothy-snyder/feed/
+        image: https://img.projektn.sk/wp-static/2015/06/I56A8343.jpg
+        output: output/ztimko.rss
+        pub_url: https://blsho.github.io/ncast/ztimko.rss
+      - feed: https://dennikn.sk/tema/trumpov-svet/feed/
+        image: https://img.projektn.sk/wp-static/2025/03/trumpov-svet.png
+        output: output/ztrump.rss
+        pub_url: https://blsho.github.io/ncast/ztrump.rss
+      - feed: https://dennikn.sk/autor/jana-ciglerova/feed/
+        image: https://img.projektn.sk/wp-static/2024/08/jana-foto.jpg
+        output: output/zjanka.rss
+        pub_url: https://blsho.github.io/ncast/zjanka.rss
+      - feed: https://dennikn.sk/tema/dusevne-zdravie/feed
+        image: https://img.projektn.sk/wp-static/2024/07/psychologicka-poradna.png
+        output: output/zkebuli.rss
+        pub_url: https://blsho.github.io/ncast/zkebuli.rss
+      - feed: https://dennikn.sk/feed
+        image: https://blsho.github.io/ncast/zdenko.png
+        output: output/znoaudio.rss
+        pub_url: https://blsho.github.io/ncast/znoaudio.rss
+        exclude:
+          - Audio N
+  - name: Denik N
+    feeds:
+      - feed: https://denikn.cz/feed
+        image: https://blsho.github.io/ncast/zcz.png
+        output: output/zcz.rss
+        pub_url: https://blsho.github.io/ncast/zcz.rss
+      - feed: https://denikn.cz/cesko/feed/
+        image: https://blsho.github.io/ncast/zcz.png
+        output: output/zczdoma.rss
+        pub_url: https://blsho.github.io/ncast/zczdoma.rss
+      - feed: https://denikn.cz/svet/feed
+        image: https://blsho.github.io/ncast/zcz.png
+        output: output/zczvonka.rss
+        pub_url: https://blsho.github.io/ncast/zczvonka.rss
+      - feed: https://denikn.cz/ekonomika/feed
+        image: https://blsho.github.io/ncast/zcz.png
+        output: output/zczvpraci.rss
+        pub_url: https://blsho.github.io/ncast/zczvpraci.rss
+      - feed: https://denikn.cz/nazory/feed
+        image: https://blsho.github.io/ncast/zcz.png
+        output: output/zczvkrcme.rss
+        pub_url: https://blsho.github.io/ncast/zczvkrcme.rss
+      - feed: https://denikn.cz/kultura/feed
+        image: https://blsho.github.io/ncast/zcz.png
+        output: output/zczpapajogurt.rss
+        pub_url: https://blsho.github.io/ncast/zczpapajogurt.rss
+      - feed: https://denikn.cz/veda/feed
+        image: https://blsho.github.io/ncast/zcz.png
+        output: output/zczodbornik.rss
+        pub_url: https://blsho.github.io/ncast/zczodbornik.rss
+      - feed: https://denikn.cz/sport/feed
+        image: https://blsho.github.io/ncast/zcz.png
+        output: output/zcztiper.rss
+        pub_url: https://blsho.github.io/ncast/zcztiper.rss
+      - feed: https://denikn.cz/podcast-vrtetipsem/feed
+        image: https://img.novydenik.com/wp-static/2025/05/Vrtetitipsem-logo-mini.png
+        output: output/zczhavo.rss
+        pub_url: https://blsho.github.io/ncast/zczhavo.rss
+      - feed: https://denikn.cz/podcast-romancovaspol/feed
+        image: https://img.novydenik.com/wp-static/2023/11/romancov-a-spol-OBR.jpg
+        output: output/zczromancov.rss
+        pub_url: https://blsho.github.io/ncast/zczromancov.rss
+      - feed: https://denikn.cz/podcast-studio-n/feed
+        image: https://img.novydenik.com/wp-static/2024/08/StudioN-logo.png
+        output: output/zczstudio.rss
+        pub_url: https://blsho.github.io/ncast/zczstudio.rss
