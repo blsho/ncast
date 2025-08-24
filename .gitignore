@@ -2,3 +2,4 @@
 .vscode
 feed
 output/*.rss
+output/content.html

@@ -42,7 +42,7 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
         <itunes:explicit>false</itunes:explicit>
         <itunes:category text="News" />
         <itunes:image href="{{ pic }}"/>
-        <podcast:funding url="https://predplatne.dennikn.sk/">Ak chces ZdeNka, tak nebuť k*k*t a kúp si Nko.</podcast:funding>
+        <podcast:funding url="{{ group.funding }}">Ak chces ZdeNka, tak nebuť k*k*t a kúp si Nko.</podcast:funding>
         {%- for entry in rss.entries[:500] %}
         {%- if entry.enclosures[0] %}
         <item>
@@ -62,6 +62,27 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
         {%- endfor %}
     </channel>
 </rss>"""
+
+web_template = """
+{%- for group in config.groups %}
+<h1>{{ group.header }}</h1>
+<p>{{ group.description }}</p>
+<table>
+    <tr>
+        <th>Čo</th>
+        <th>Názov</th>
+        <th>URL</th>
+    </tr>
+    {%- for feed in group.feeds %}
+    <tr>
+        <td>{{ feed.description }}</td>
+        <td>{{ feed.name }}</td>
+        <td><code>{{ feed.pub_url }}</code></td>
+    </tr>
+    {%- endfor %}
+</table>
+{%- endfor %}
+"""
 
 ua = UserAgent(os=["Windows", "Android", "iOS"], min_percentage=0.05)
 
@@ -120,7 +141,7 @@ async def process_episode(episode, session, rss_podcast):
 
 
 # Function to process each task
-async def process_feed(task_config):
+async def process_feed(task_config, group):
     feed = task_config.get("feed")
     image = task_config.get("image")
     output = task_config.get("output")
@@ -141,7 +162,7 @@ async def process_feed(task_config):
         await asyncio.gather(*tasks)
         template_j2 = Template(template)
         try:
-            podcast_xml = template_j2.render(rss=rss_podcast, pic=image)
+            podcast_xml = template_j2.render(rss=rss_podcast, pic=image, group=group)
         except Exception as e:
             print(f"Error while templating: {e}")
         try:
@@ -151,8 +172,22 @@ async def process_feed(task_config):
             print(f"Error writing to file for {feed}: {e}")
 
 
-def thread(cfg):
-    asyncio.run(process_feed(cfg))
+def thread(feed, group):
+    asyncio.run(process_feed(feed, group))
+
+
+def generate_page(config):
+    web_filename = config.get("web_filename")
+    template_j2 = Template(web_template)
+    try:
+        web = template_j2.render(config=config)
+    except Exception as e:
+        print(f"Error while templating: {e}")
+    try:
+        with open(web_filename, "w") as f:
+            f.write(web)
+    except Exception as e:
+        print(f"Error writing to file for {web_filename}: {e}")
 
 
 # Load configuration from YAML file
@@ -181,10 +216,12 @@ def main():
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         [
-            executor.submit(thread, feed)
+            executor.submit(thread, feed, group)
             for group in config["groups"]
             for feed in group["feeds"]
         ]
+
+    generate_page(config)
 
 
 if __name__ == "__main__":
