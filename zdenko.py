@@ -65,41 +65,59 @@ template = """<?xml version="1.0" encoding="{{ rss.encoding }}"?>
 
 ua = UserAgent(os=["Windows", "Android", "iOS"], min_percentage=0.05)
 
+
 def needed_episode(episode, exclude):
     if exclude:
-        categories = set(map(lambda tag: tag['term'], episode.tags))
+        categories = set(map(lambda tag: tag["term"], episode.tags))
         if set(exclude).intersection(categories):
             return False
     return True
 
+
 async def process_episode(episode, session, rss_podcast):
-    episode_podcast={}
+    episode_podcast = {}
     try:
-        async with session.get(episode.link, headers={"User-Agent": ua.random}) as article:
+        async with session.get(
+            episode.link, headers={"User-Agent": ua.random}
+        ) as article:
             content_parser = BeautifulSoup(await article.text(), "html.parser")
             episode_podcast["title"] = episode.title
             episode_podcast["author"] = episode.author
             episode_podcast["published"] = episode.published
             episode_podcast["guid"] = episode.guid
             episode_podcast["link"] = episode.link
-            episode_podcast["enclosures"]= [{}]
-            episode_podcast["enclosures"][0]["href"]= content_parser.audio.source.attrs["src"]
-            episode_podcast["itunes_duration"] = content_parser.audio.attrs["data-duration"]
+            episode_podcast["enclosures"] = [{}]
+            episode_podcast["enclosures"][0]["href"] = (
+                content_parser.audio.source.attrs["src"]
+            )
+            episode_podcast["itunes_duration"] = content_parser.audio.attrs[
+                "data-duration"
+            ]
 
-            description_sufix = f'<br><p>Viac na <a href="{ episode.link }">{ episode.link }</a></p>'
+            description_sufix = (
+                f'<br><p>Viac na <a href="{ episode.link }">{ episode.link }</a></p>'
+            )
             episode_podcast["description"] = f"{episode.description}{description_sufix}"
-            async with session.head(episode_podcast["enclosures"][0]["href"], headers={"User-Agent": ua.random}) as voice:
+            async with session.head(
+                episode_podcast["enclosures"][0]["href"],
+                headers={"User-Agent": ua.random},
+            ) as voice:
                 if voice.status == 200:
-                    episode_podcast["enclosures"][0]["length"] = voice.headers["content-length"]
+                    episode_podcast["enclosures"][0]["length"] = voice.headers[
+                        "content-length"
+                    ]
             episode_art = content_parser.find("h1").img.attrs["src"].split("?")[0]
             if episode_art.endswith((".png", ".jpg")):
-                episode_podcast["image"]["href"]= episode_art
+                episode_podcast["image"]["href"] = episode_art
             content_parser.find(class_="entry-content").find("div").decompose()
             content_parser.find(class_="entry-content").find("span").decompose()
-            episode_podcast["description"] = f"{content_parser.find(class_="entry-content")}{description_sufix}"
+            episode_podcast["description"] = (
+                f"{content_parser.find(class_="entry-content")}{description_sufix}"
+            )
     except Exception:
         pass
     rss_podcast.entries.insert(0, episode_podcast)
+
 
 # Function to process each task
 async def process_feed(task_config):
@@ -110,12 +128,16 @@ async def process_feed(task_config):
     pub_url = task_config.get("pub_url")
     rss_articles = feedparser.parse(feed, agent=ua.random)
     rss_podcast = feedparser.parse(pub_url)
-    parsed_guids = [entry['guid'] for entry in rss_podcast['entries']]
+    parsed_guids = [entry["guid"] for entry in rss_podcast["entries"]]
     if len(parsed_guids) == 0:
         rss_podcast = copy.deepcopy(rss_articles)
 
     async with aiohttp.ClientSession() as session:
-        tasks = [process_episode(episode, session, rss_podcast) for episode in rss_articles.entries if needed_episode(episode, exclude) and episode["guid"] not in parsed_guids]
+        tasks = [
+            process_episode(episode, session, rss_podcast)
+            for episode in rss_articles.entries
+            if needed_episode(episode, exclude) and episode["guid"] not in parsed_guids
+        ]
         await asyncio.gather(*tasks)
         template_j2 = Template(template)
         try:
@@ -128,8 +150,10 @@ async def process_feed(task_config):
         except Exception as e:
             print(f"Error writing to file for {feed}: {e}")
 
+
 def thread(cfg):
     asyncio.run(process_feed(cfg))
+
 
 # Load configuration from YAML file
 def load_config(yaml_path):
@@ -149,13 +173,18 @@ def parse_args():
     parser.add_argument("config", type=str, help="Path to the YAML configuration file")
     return parser.parse_args()
 
+
 # Main function
 def main():
     args = parse_args()
     config = load_config(args.config)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        [executor.submit(thread, feed) for group in config['groups'] for feed in group['feeds']]
+        [
+            executor.submit(thread, feed)
+            for group in config["groups"]
+            for feed in group["feeds"]
+        ]
 
 
 if __name__ == "__main__":
