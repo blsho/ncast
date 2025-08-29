@@ -103,6 +103,12 @@ groups:
         pub_url: https://blsho.github.io/ncast/znoaudio.rss
         exclude:
           - Audio N
+      - name: Zdenko bije Vladka
+        description: Vývoj bojov
+        feed: https://dennikn.sk/tema/vyvoj-vojny-na-ukrajine/feed
+        image: https://img.projektn.sk/wp-static/2024/07/vyvoj-bojov.png
+        output: output/zvladko.rss
+        pub_url: https://blsho.github.io/ncast/zvladko.rss
   - name: Denik N
     funding: https://predplatne.denikn.cz/
     header: A helé
