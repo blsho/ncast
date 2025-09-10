@@ -109,6 +109,12 @@ groups:
         image: https://img.projektn.sk/wp-static/2024/07/vyvoj-bojov.png
         output: output/zvladko.rss
         pub_url: https://blsho.github.io/ncast/zvladko.rss
+      - name: Zdenko a Ivko
+        description: Ivan Mikloš
+        feed: https://dennikn.sk/autor/ivan-miklos/feed/
+        image: https://img.projektn.sk/wp-static/2022/03/pjimage-2-1-1.jpg
+        output: output/zivko.rss
+        pub_url: https://blsho.github.io/ncast/zivko.rss
   - name: Denik N
     funding: https://predplatne.denikn.cz/
     header: A helé
