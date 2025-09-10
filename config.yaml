@@ -115,6 +115,12 @@ groups:
         image: https://img.projektn.sk/wp-static/2022/03/pjimage-2-1-1.jpg
         output: output/zivko.rss
         pub_url: https://blsho.github.io/ncast/zivko.rss
+      - name: Zdenko a Romancov
+        description: Michael Romancov
+        feed: https://dennikn.sk/autor/michael-romancov/feed/
+        image: https://img.projektn.sk/wp-static/2017/04/Romancov-zdrojANTECOM-e1591952168225.jpg
+        output: output/zromancov.rss
+        pub_url: https://blsho.github.io/ncast/zromancov.rss
   - name: Denik N
     funding: https://predplatne.denikn.cz/
     header: A helé
