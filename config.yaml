@@ -192,3 +192,9 @@ groups:
         image: https://img.novydenik.com/wp-static/2024/08/StudioN-logo.png
         output: output/zczstudio.rss
         pub_url: https://blsho.github.io/ncast/zczstudio.rss
+      - name: ZděNko kričí fuck yeah!
+        description: Amerika bejby
+        feed: https://denikn.cz/podcast-amerikabejby/feed
+        image: https://img.novydenik.com/wp-static/2025/10/americky-podcast-ikona.png
+        output: output/zczfckyeah.rss
+        pub_url: https://blsho.github.io/ncast/zczfckyeah.rss
