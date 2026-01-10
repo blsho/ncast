@@ -121,6 +121,12 @@ groups:
         image: https://img.projektn.sk/wp-static/2017/04/Romancov-zdrojANTECOM-e1591952168225.jpg
         output: output/zromancov.rss
         pub_url: https://blsho.github.io/ncast/zromancov.rss
+      - name: ZdeNko budí respekt
+        description: Respekt
+        feed: https://dennikn.sk/autor/respekt/feed/
+        image: https://img.projektn.sk/wp-static/2023/12/channels4profile-2-2.jpg
+        output: output/zrespekt.rss
+        pub_url: https://blsho.github.io/ncast/zrespekt.rss
   - name: Denik N
     funding: https://predplatne.denikn.cz/
     header: A helé
