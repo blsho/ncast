@@ -127,6 +127,12 @@ groups:
         image: https://img.projektn.sk/wp-static/2023/12/channels4profile-2-2.jpg
         output: output/zrespekt.rss
         pub_url: https://blsho.github.io/ncast/zrespekt.rss
+      - name: ZdeNLko sadí tulipány
+        description: Čo sa deje v Holandsku
+        feed: https://dennikn.sk/feed/?s=holand
+        image: https://blsho.github.io/ncast/zdeNLko.png
+        output: output/zholand.rss
+        pub_url: https://blsho.github.io/ncast/zholand.rss
   - name: Denik N
     funding: https://predplatne.denikn.cz/
     header: A helé
