@@ -127,6 +127,12 @@ groups:
         image: https://img.projektn.sk/wp-static/2023/12/channels4profile-2-2.jpg
         output: output/zrespekt.rss
         pub_url: https://blsho.github.io/ncast/zrespekt.rss
+      - name: ZdeNko víkenduje
+        description: Víkend bez politiky
+        feed: https://dennikn.sk/tema/vikend-bez-politiky/feed/
+        image: https://img.projektn.sk/wp-static/2025/07/Vikend-bez-politiky.png
+        output: output/zvikend.rss
+        pub_url: https://blsho.github.io/ncast/zvikend.rss
   - name: Denik N
     funding: https://predplatne.denikn.cz/
     header: A helé
