@@ -133,6 +133,12 @@ groups:
         image: https://blsho.github.io/ncast/zdeNLko.png
         output: output/zholand.rss
         pub_url: https://blsho.github.io/ncast/zholand.rss
+      - name: ZdenISko pozoruje auroru
+        description: Čo sa deje na Islande
+        feed: https://dennikn.sk/feed/?s=island
+        image: https://blsho.github.io/ncast/zdenISko.png
+        output: output/zisland.rss
+        pub_url: https://blsho.github.io/ncast/zisland.rss
       - name: ZdeNko víkenduje
         description: Víkend bez politiky
         feed: https://dennikn.sk/tema/vikend-bez-politiky/feed/
