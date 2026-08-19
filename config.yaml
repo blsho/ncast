@@ -1,4 +1,5 @@
 web_filename: output/content.html
+log_level: DEBUG
 groups:
   - name: Dennik N
     funding: https://predplatne.dennikn.sk/
