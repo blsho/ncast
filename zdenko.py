@@ -103,12 +103,18 @@ def needed_episode(episode: dict[str, Any], exclude: list[str] | None) -> bool:
     try:
         if exclude:
             tags = getattr(episode, "tags", []) or []
-            categories = {tag["term"] for tag in tags if isinstance(tag, dict) and "term" in tag}
+            categories = {
+                tag["term"] for tag in tags if isinstance(tag, dict) and "term" in tag
+            }
             if categories.intersection(set(exclude)):
                 return False
         return True
     except Exception as exc:
-        logger.warning("Unable to evaluate episode exclusion for %s: %s", getattr(episode, "title", "unknown"), exc)
+        logger.warning(
+            "Unable to evaluate episode exclusion for %s: %s",
+            getattr(episode, "title", "unknown"),
+            exc,
+        )
         return True
 
 
@@ -149,9 +155,7 @@ async def process_episode(
             episode_podcast["itunes_duration"] = audio_tag.get("data-duration", "")
             episode_podcast["image"] = {}
 
-            description_suffix = (
-                f'<br><p>Viac na <a href="{url}">{url}</a></p>'
-            )
+            description_suffix = f'<br><p>Viac na <a href="{url}">{url}</a></p>'
             description = getattr(episode, "description", "") or ""
             episode_podcast["description"] = f"{description}{description_suffix}"
 
@@ -178,9 +182,7 @@ async def process_episode(
                 first_span = entry_content.find("span")
                 if first_span:
                     first_span.decompose()
-                episode_podcast["description"] = (
-                    f"{entry_content}{description_suffix}"
-                )
+                episode_podcast["description"] = f"{entry_content}{description_suffix}"
 
             rss_podcast.entries.insert(0, episode_podcast)
             logger.debug("Stored processed episode: %s", title)
@@ -201,7 +203,9 @@ async def process_feed(task_config: dict[str, Any], group: dict[str, Any]) -> No
         logger.info("Processing feed: %s", feed)
         rss_articles = feedparser.parse(feed, agent=ua.random)
         rss_podcast = feedparser.parse(pub_url)
-        parsed_guids = [entry["guid"] for entry in rss_podcast["entries"] if "guid" in entry]
+        parsed_guids = [
+            entry["guid"] for entry in rss_podcast["entries"] if "guid" in entry
+        ]
         if len(parsed_guids) == 0:
             rss_podcast = copy.deepcopy(rss_articles)
 
@@ -209,7 +213,8 @@ async def process_feed(task_config: dict[str, Any], group: dict[str, Any]) -> No
             tasks = [
                 process_episode(episode, session, rss_podcast)
                 for episode in rss_articles.entries
-                if needed_episode(episode, exclude) and episode.get("guid") not in parsed_guids
+                if needed_episode(episode, exclude)
+                and episode.get("guid") not in parsed_guids
             ]
             if tasks:
                 logger.debug("Starting %s episode tasks for %s", len(tasks), feed)
@@ -219,7 +224,9 @@ async def process_feed(task_config: dict[str, Any], group: dict[str, Any]) -> No
 
             template_j2 = Template(template)
             try:
-                podcast_xml = template_j2.render(rss=rss_podcast, pic=image, group=group)
+                podcast_xml = template_j2.render(
+                    rss=rss_podcast, pic=image, group=group
+                )
             except Exception as exc:
                 logger.exception("Error while templating feed %s: %s", feed, exc)
                 return
@@ -291,7 +298,10 @@ def main() -> None:
 
     try:
         groups = config.get("groups", [])
-        logger.info("Dispatching %s group/feed tasks", sum(len(group.get("feeds", [])) for group in groups))
+        logger.info(
+            "Dispatching %s group/feed tasks",
+            sum(len(group.get("feeds", [])) for group in groups),
+        )
         with concurrent.futures.ThreadPoolExecutor() as executor:
             futures = [
                 executor.submit(thread, feed, group)
